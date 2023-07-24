@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Computer Graphics - Final Project</title>
+
+    <link href="resources/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/offcanvas.css" rel="stylesheet">
+    <link href="resources/custom2014.css" rel="stylesheet">
+    <link href="resources/twentytwenty.css" rel="stylesheet" type="text/css" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container headerBar">
+		<h1>Application for rendering competition - Yu Haitao</h1>
+</div>
+
+<div class="container contentWrapper">
+<div class="pageContent">
+
+	<!-- ================================================================= -->
+
+	<h2>1. Theme and Motivation</h2>
+    <div style="text-align: center;">
+        <img src="images/ArchitectureAndMorality.jpg" width="500"><br>
+        <p style="font-family:cursive; font-size: 20px; color: black;"><a href="https://glenn-brown.co.uk/artworks/139/#">Architecture and Morality, 2004</a></p><br>
+        <img src="images/outofplace2.jpg" width="500"><br>
+        <p style="font-family:cursive; font-size: 20px;"><a href="https://www.gettyimages.ch/detail/foto/surreal-man-head-in-the-cloud-lizenzfreies-bild/861553788">Surreale Mann Kopf in der cloud - Stock-Fotografie</a></p><br><br>        
+    </div>
+
+	<p >Topic for this year's rendering competition is "out of place", which 
+        describes a scenario that something in a inappropriate position or 
+        something messy and disarranged. <br><br>
+        My idea is inspried by these two surreal-style images above, where some natural things (a bouquet of flowers, fog)
+        come out of a human's head. First one is an oil paint called "Architecture and Morality" from artist Gleen Brown.
+        My ideal outcome would be a combination of these two
+        images in a proper and aesthetic way. In particular, I want to construct an indoor scene includes
+        a garmented person's boby with his head replaced by some fancy flowers, surrounded by some faint mist.
+        <br><br>
+        This ideal result will be consistent with the topic "out of place" in some respects. Visually, the natural objects 
+        come out of nowhere and somehow replace the human's head. Conceptually, this picture indicates a human's disarranged and messy mind.
+
+    </p>
+    <br><br>
+
+	<!-- ================================================================= -->
+
+	<h2>2. Results</h2>
+    Inspired by the idea above, I want to construct an open scene that uses a dimmed, obsolete city as the background. The main component of the 
+    scene would be a big sci-fi tree with mysterious glow that suddenly comes out of nowhere and interrupts the city. The tree is surrounded by 
+    abstract and giant elements that is agnostic to the people in the city. Subsequently, people nearby are influenced by the tree and start
+    transforming their figure. Bouquet of flowers come out of their head and take their body over....<br><br>
+
+    <h3>scene construction </h3>
+    Contructing from scratch, a cluster of city buildings meshes are placed at the back of the init plane as the overall background of the whole scene.<br><br>
+    <p style="margin-left:20em">
+        <img src="images/cityBG.png" width = 500 alt="City background"></p><br>
+        <!-- <img src="myImages/sourceImages/stonenormal.png" width = 500 height = 500 alt="Texture 2"></p> <br> -->
+    Then the tree is placed with certian landscape attached and some giant dielectric plane as a division. Besides, to create the dimmed atomsphere,
+    a homogenerous medium is added.<br><br>
+    <p style="margin-left:5em">
+        <img src="images/addtree.png" width = 500 >   <img src="images/treeCam.png" width = 460 ></p><br>
+    
+    Then, some abstract mesh elements and area lights are created surrounding the main tree, which makes the tree looks more mysterious <br><br>
+    <p style="margin-left:4em">
+        <img src="images/abstract.png" width = 500 >    <img src="images/abstractCam.png" width = 500 ></p><br>
+
+    Too create more visual impact, some fancy staffs are added. Particularly, a floating particle system that mimics a comtinuous flow from the root of the tree, glowing in light 
+    purple. Seconly, a wireframe icoshpere is created with geometry frame, which also make the scene looks more complex.<br><br>
+    <p style="margin-left:4em">
+        <img src="images/particles.png" width = 400 >    <img src="images/ico.png" width = 500 ></p><br>
+    <p style="margin-left:18em">
+        <img src="images/fancy.png" width = 600 >  </p><br>
+
+    Then, main characters are introduced with their meshes pre-edited with their heads replaced by flowers. Both meshes are downloaded and I did the editting part.<br><br>
+    <p style="margin-left:10em">
+        <img src="images/man1.png" height = 400 >    <img src="images/woman.png" height = 400 >  <img src="images/man2.png" height = 400 ></p><br>
+
+    
+    <h3>texture and materials </h3>
+    Most of the materials used are only diffuse. Some image textures are applied together with the normal mapping. Listed below are some use texture, where most of them are tagged with obsolete 
+    or rusty. (bricks, tree bark, stone, damaged concrete)<br><br>
+    <p style="margin-left:10em">
+        <img src="images/treebark.png" width = 400 >    <img src="images/cliff.png" width = 400 >  </p><br>
+    <p style="margin-left:10em">
+        <img src="images/tile.png" width = 400 ><img src="images/concrete.png" width = 400 ></p><br>
+
+    <h3>Rendering </h3>
+    Given that we use homogenerous medium, I implemented a volumetric photonmapper to take in charge of this scene. With proper lighting and arrangment of meshes, the rendering results are given as followings:<br><br>
+    <p style="margin-left:12em">
+        <img src="images/FinalScene.png" width = 750 >    </p><br>
+
+    The rendering result from blender:
+    <p style="margin-left:12em">
+        <img src="images/blenderscene.png" width = 750 >    </p><br>
+
+    I didn't add texture in blender yet, so result from blender is more clear comparing to mine. I haven't got enough time for tuning the parameters of my scene. I will do finer tuning if I 
+    was chosen for RC. LOL...
+</div>
+</div>
+
+
+<!-- Bootstrap core JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="resources/bootstrap.min.js"></script>
+<script src="resources/jquery.event.move.js"></script>
+<script src="resources/jquery.twentytwenty.js"></script>
+
+
+<script>
+$(window).load(function(){$(".twentytwenty-container").twentytwenty({default_offset_pct: 0.5});});
+</script>
+
+</body>
+</html>

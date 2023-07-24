@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="../favicon.ico" />
+
+    <title>Computer Graphics - PA4</title>
+
+    <link href="resources/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/offcanvas.css" rel="stylesheet">
+    <link href="resources/custom2014.css" rel="stylesheet">
+    <link href="resources/twentytwenty.css" rel="stylesheet" type="text/css" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+
+<body>
+
+<div class="container headerBar">
+		<h1>Final Report - Haitao Yu</h1>
+</div>
+
+<div class="container contentWrapper">
+<div class="pageContent">
+
+	<!-- ================================================================= -->
+<p>Please refer to dir "RC_yuhaitao" for the final rendered scene! Because I want to participate in the RC, I wrote a detailed html to introduce my final scene.</p>
+
+<h2>1. Image Textures && Normal Mapping (5pts) </h2>
+  Relevant classes
+  <br>
+  <code> normalTexture.cpp </code> <br>
+  <code> imageTexture.cpp </code> <br>
+  <code> mesh.cpp </code> (modified)<br>
+  <code> sphere.cpp </code> (modified)<br>
+  <br>
+
+  I implemented feature Normal mapping based on Image as Texture which takes PNG images as inputs. <br>
+  As to image as texutre, to properly handle PNG pics, I introduced library <code>lodepng</code> and stored the RGB values in a vector.
+  The RGB value of each pixel is trivially interpolated from the given PNG to mapping the input image
+  to our target mesh. The texture can be easliy scaled in the xml.<br><br>
+
+
+  For Normal mapping, a new function <code>hasNormal()</code> is added to each BSDF subclass. The mesh intersection fucntion
+  in Nori should also be changed to create a local frame based on the mapped normal (normal vector is simply 
+  taken from the RBG of the input image via a trivial affine mapping \(2x - 1\), in order to make the range reasonable for a normal vector. That's the reason
+  why most normal mapping texture is almost blue,
+  for that (0,0,1) is unmodified default local normal, and also blue in RGB).
+  A combination with Image as texture with normal mapping is a good way emulate a true landscape
+  in an very efficient way, as long as two input PNGs consistent with each other.<br> <br>
+  The result for my Image Textures && Normal Mapping is illustrated with a Suzanna mesh from blender.
+  The texture is a very rough stone surface. Four comparisons include plain image, plain normal mapping, plain image mappping
+  and "Image Texture + Normal Mapping". <br><br>
+  
+  <div class="twentytwenty-container">
+    <img src="myImages/onlynomralSZ.png" alt="Plain normal" class="img-responsive">
+    <img src="myImages/stoneSZ.png" alt="Texture + normal" class="img-responsive">
+    <img src="myImages/plainSZ.png" alt="Plain reference" class="img-responsive">
+    <img src="myImages/onlytextureSZ.png" alt="Plain Texture" class="img-responsive">
+  </div> <br><br>
+
+  Further validation on normal mapping is conducted based on <code>Integrator::Normals</code>, for visualizing 
+  the normal mapping. The mesh part is not identical due to the incoming normal PNG determines the normal of 
+  local frame, but Normals integrator returns the world frame values.
+
+  <div class="twentytwenty-container">
+    <img src="myImages/normalExplicit.png" alt="Explict normals" class="img-responsive">
+    <img src="myImages/normalInt.png" alt="Using 'normals' integrator" class="img-responsive">
+  </div> <br><br>
+
+  These are the input textures:<br><br>
+  <p style="margin-left:2em">
+  <img src="myImages/sourceImages/stones.png" width = 500 height = 500 alt="Texture 1">
+  <img src="myImages/sourceImages/stonenormal.png" width = 500 height = 500 alt="Texture 2"></p> <br>
+
+<h2>2. Modeling Meshes (5pts) </h2>
+    The final scene for rendering competition is constructed with Blender, where mesh modeling is extensively needed.
+    I didn't construct all the meshes. Some complicated ones are downloaded from the internet. But I have constructed some simply meshes, including some 
+    further editing on given meshes and arrange several meshes in good shapes.<br>
+
+    Here is an overview of my whole scene (from side-above and the camera view), which is constructed from scratch.<br><br>
+
+    <p style="margin-left:2em">
+    <img src="myImages/meshModeling/blenderscene.png" width = 500 height = 500 alt="Scene"> <img src="myImages/meshModeling/sceneCam.png" width = 510 height = 500 alt="Scene"></p><br>
+
+    For editing meshes, I took three downloaded characters and replace their head with flower meshes in cater with my theme.<br><br>
+
+    <p style="margin-left:10em">
+    <img src="myImages/meshModeling/woman.png" width = 300 height = 500 alt="Scene">  <img src="myImages/meshModeling/man1.png" width = 250 height = 500 alt="Scene">   <img src="myImages/meshModeling/man2.png" width = 250 height = 500 alt="Scene"></p><br>
+    
+    For constructing simple meshes and scene arrangement, I modeled some trivial ones and used them as some of my basic constructive elements in my scene, like the door frame, 
+    the cross and tours. <br>
+    There are some other fancy staff, like the landscape mesh and tree generator which is the build-in plugin in blender. In addition, I also play around with the geometry nodes
+    of blender for some no-trivial structure. I used the particle system for generating floating glowing particles (need mesh convertion) and the wireframe funtionality for a ico-wireframe mesh.<br> 
+    <p style="margin-left:10em">
+    <img src="myImages/meshModeling/ico.png" width = 400 height = 300 alt="Scene">  <img src="myImages/meshModeling/particles.png" width = 300 height = 300 alt="Scene"> </p><br>
+
+
+
+<h2>3. Disney BSDF (15pts) </h2>
+
+Following section is about implementation for Disney principled BSDF. Roughness, specular(specularTint), metal(anisotropic), clearcoat(clearcoatGloss) and sheen(sheenTint) are implemented. 5 proposed ones will
+be detailed here. <br>
+Two main reference are from <a href="https://cseweb.ucsd.edu/~tzli/cse272/homework1.pdf">UCSB</a> and <a href="https://schuttejoe.github.io/post/disneybsdf/">schuttejoe</a>. A complete recitation of the theoretical calculation of different lobes would be too redundant here. Instead, some implement highlights are elucidated here:<br>
+(1): All lobe evaluations in UCSB have already considered the costheta of <code>wo</code>, which is handled in both <code>sample()</code> and <code>pdf()</code> instead of in <code>eval()</code>, respect to Nori convention.<br>
+(2): A complete diffuse part should be complemented with speuclar contribution assigned to a modified metallic lobe calculation. Thus, weight of specular part is always non-zero.<br>
+(3): Sampling of disney BSDF is a naive weighted sampling with three lobes: Diffuse part sampled with coshemisphere(); Clearcoat part sampled with Isotropic Trowbridge-Reitz Distribution(GTR2);
+Metallic part sampled with anisotropic GTR distribution.<br>
+<br>
+
+
+<h3>Results </h3>
+The performance of disneyBSDF is shown with an example scene from blender. DisneyBSDF is assigned to the outer shell of the object. Rendering is done on scenes with a gradually varying parameter of specific lobe,
+with other lobes parameters frozen for comparing. From upper to bottom: roughness(blue), specular(green), clearcoat(red), metal(purple) and sheen(white); From left to right: gradually increasing weight of specified 
+lobe with 0.2 spacing.
+
+<p style="margin-left:15em"> <strong> 0.2 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 0.4 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 0.6 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+  0.8 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 1.0 </strong>
+
+
+<p style="margin-left:10em">
+  <img src="myImages/disney/roughness/rough02.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/roughness/rough04.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/roughness/rough06.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/roughness/rough08.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/roughness/rough10.png" width = 150 height = 150 alt="00">
+  <br> <br>
+  <img src="myImages/disney/specular/spec02.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/specular/spec04.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/specular/spec06.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/specular/spec08.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/specular/spec10.png" width = 150 height = 150 alt="00">
+  <br>  <br>
+  <img src="myImages/disney/cc/cc02.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/cc/cc04.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/cc/cc06.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/cc/cc08.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/cc/cc10.png" width = 150 height = 150 alt="00">
+  <br>  <br>
+  <img src="myImages/disney/metal/metal02.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/metal/metal04.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/metal/metal06.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/metal/metal08.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/metal/metal10.png" width = 150 height = 150 alt="00">
+  <br>  <br>
+  <img src="myImages/disney/sheen/sheen02.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/sheen/sheen04.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/sheen/sheen06.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/sheen/sheen08.png" width = 150 height = 150 alt="00"> <img src="myImages/disney/sheen/sheen10.png" width = 150 height = 150 alt="00">
+  <br>  <br>
+
+  <h3>Validation </h3>
+  For importance sampling of disney BSDF, most critical part is to correctly implement the sampling and pdf of Trowbridge-Reitz Distribution(GTR1 for metal lobe, GTR2 for clearcoat lobe)/
+  In this part, the warptest results of GTR1 and GTR2 is shown to validate the consistency of these two distribution. Since GTRs depend on some prescribed input parameters, to clarify,
+  I used a \((1,1,1)\) vector(normalized) as the incoming direction of GTR1 and sampling the half vector; I used \(\alpha = 0.1 \) as GTR2's input alpha, which should be a interpolation between 0.1 and 0.001.<br>
+  Unfortunately, I barely manage to make my DisneyBSDFs share zero difference with Mitsuba's 
+  principled BSDF. Some of them have slight but visible difference in tev. So, I didn't post my comparison with Mitsuba here. I have checked a lots of time and didn;t manage to find
+  the mistake. <br><br>
+
+  <p style="margin-left:22em"> <strong> GTR1 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; GTR2</strong><br>
+  <p style="margin-left:7em">
+  <img src="myImages/disney/GTR1.png" width = 450 height = 300 alt="GTR1 sampling">
+  <img src="myImages/disney/GTR2.png" width = 450 height = 300 alt="GTR2 sampling"></p> <br>
+  <p style="margin-left:7em">
+  <img src="myImages/disney/GTR1pdf.png" width = 450 height = 230 alt="GTR1 pdf test">             
+  <img src="myImages/disney/GTR2pdf.png" width = 450 height = 230 alt="GTR2 pdf test"></p> <br>
+
+<h2>4. Heterogeneous Participating Media (30pts)</h2>
+
+  Relevant classes
+  <br>
+  <code> medium.h/.cpp </code> <br>
+  <code> vol_photonMapper.cpp </code> <br>
+  <br>
+
+  In following section the implementation of the heterogeneous medium and
+  the volumetric photonmapper are presented.
+
+  <h3>Medium </h3>
+
+  A heterogeneous medium is featured with a positional varying density, adsorption<code> sigma_a </code> and scattering coefficient <code> sigma_s </code>.
+  Albedo and transmittance can be computed from the above properties. Trivially, in this implementation, the medium 
+  is not binded to a certian mesh(shape object), but only with a bounding box with assigned size and position. Even though 
+  losing capability of constructing fancy medium with mesh, this implementation can support any analytic representation (explicit and implicit)
+  of shapes and the main feature of a heterogeneous medium: a positional varying property.
+  <br>
+
+  Comparing to a classic photonmapper, volumetric photonmapper need to handle the transmittance accumulation and the scattering of 
+  a phton in the medium. To tackle these two aspects, three main functionalities are expected from vol_photonMapper: <br>
+  (1) A shape object that is responsible for the interaction between ray and medium. This is done with a bounding box(bbox for short) object,
+  which is already implemented in Nori. Particularly, I used <code>rayIntersection() </code> of bbox to determine the two intersection point of 
+  a box and a ray, which is regarded as tmin and tmax for further transmittance calculation and sampling process.<br>
+  (2) Free path sampling, which importance sampling along the traced ray according to the transmittance. As to heterogeneous medium,
+  the total transmittance(an integration of expotential sigma_t along the path) of a given path segment is intractable. Ray marching uses a baiased MC estimation (pairwise constant fucntion) for calculation
+  this transmittance. <br>
+  (3) Ray marching for re-collection of distributed photons: to re-collect the photons in the 3D volume and evaluate the radiance of a ray which 
+  pass a medium.<br>
+
+  <br>
+  Given the settings above, a Heart shape fog-like medium with positional-varying optical property is created and rendered with <code> vol_photonMapper.cpp </code>.
+  The density of the medium is determined with a linear decay function \(\frac{1}{r + 0.1}\).
+  The implicit shape representation funciton of heart is given as following:
+  <br> <br>
+  <span class="MathJax_Preview" style="color: inherit;"></span><span class="mjx-chtml MJXc-display" style="text-align: center;"><script type="math/tex; mode=display" id="MathJax-Element-40">
+    \text{Heart function: }(x^2 + \frac{9}{4} z^2 + y^2 - 1)^3 - x^2y^3 - \frac{9}{80} y^3 z^2 = 0
+    </script><br>
+  <span class="MathJax_Preview" style="color: inherit;"></span><span class="mjx-chtml MJXc-display" style="text-align: left;">
+
+
+  <div class="twentytwenty-container">
+    <img src="myImages/hetero/mediaHeart.png" alt="sigma_a = 0.2, sigma_s = 0.2" class="img-responsive">
+    <img src="myImages/hetero/mediaHeart2.png" alt="sigma_a = 0.5, sigma_s = 0.5" class="img-responsive">
+    <img src="myImages/hetero/heteroHeart.png" alt="Heart with linear decay density" class="img-responsive">
+  </div> <br><br>
+
+  <h3> Validation </h3>
+  Here is my validation for heterogeneous medium with a homogenous sphere reference in Mitsuba. Please note that, I used a bounding box 
+  for creation of a medium in a given scene. Any introduced shape apart from prescibed bounding box (with exact size) should be created with 
+  <code>Medium::heterogeneous() </code>function. Even though this is a homogenous sphere medium, it is actually created by assigning density 
+  to each volumetric pixel according to the given sphere funciton. Thus, rendering this homogenerous sphere in bounding box can only be done with a heterogeneous 
+  volumetric integrator with the above setting. Comparison it with a homogenerous sphere scene in Mitsuba can verify the correctness of implementation.
+  <br>
+  <div class="twentytwenty-container">
+    <img src="myImages/hetero/mediaSphere.png" alt="My Heterogeneous medium with Vol_PM" class="img-responsive">
+    <img src="myImages/hetero/mediaMitsuba.png" alt="Mitsuba Reference with Vol_path_mis" class="img-responsive">
+  </div> <br><br>
+
+  According to the comparison result in tev, a zero mean difference is obtained, but with a skewed variance distribution. This can be attributed to
+  the difference of a path_mis tracer and a photonmapper. 
+
+  <div class="twentytwenty-container">
+    <img src="myImages/hetero/mediaTev.png" alt="Comparsion in Tev" class="img-responsive">
+    <img src="myImages/hetero/mediaTev2.png" alt="Inversed" class="img-responsive">
+  </div> <br><br>
+
+  <h3> Volumetric PhotonMapper with Ray Marching for heterogeneous media</h3>
+
+  Psuedocode of my <code>vol_photonmapper</code>:
+  <br>
+<pre>
+prepocess()
+  while (true)
+    mesh_its = scene->RayIntersection()
+    if (!mesh_its)
+        if medium->rayinteraction(); # need to correctly handle the ray interaction point with both medium and mesh
+          ... # use the build-in function RayIntersection() from Boundingbox for fast calculate of medium-ray interaction
+        
+        FreePathDistribution() #sampling with ray marching estimation for transmittance
+
+        if(sample point inside medium)
+          deposit
+          sample_phaseFunction()
+          update traced Ray()
+          ...
+
+        else
+          deposit and sample BSDF()
+          ...
+
+        Russian Roulette;
+
+Li()
+  while(true)
+    similar ray intersection for mesh and medium...
+
+    if(has interaction with medium)
+      ray marching along the ray until touching tmax #can be both mesh or medium boundaries
+      evaluate transmittance
+      re-collecting scattered photons in the medium
+      handle global t for accumulate the transmittance
+    
+    if(no mesh intersection)
+      break;
+
+    calculate contribution of shadowray
+
+    re-collect photons on bsdf...
+
+    Russian Roulette;
+</pre>
+
+
+
+
+
+
+<!-- Bootstrap core JavaScript -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="resources/bootstrap.min.js"></script>
+<script src="/js/offcanvas.js"></script>
+<script src="resources/jquery.event.move.js"></script>
+<script src="resources/jquery.twentytwenty.js"></script>
+
+
+<script>
+$(window).load(function(){$(".twentytwenty-container").twentytwenty({default_offset_pct: 0.5});});
+</script>
+
+</body>
+</html>
